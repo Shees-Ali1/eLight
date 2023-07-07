@@ -1,0 +1,47 @@
+PODS:
+  - battery (0.0.1):
+    - Flutter
+  - battery_plus (1.0.0):
+    - Flutter
+  - Flutter (1.0.0)
+  - gallery_saver (0.0.1):
+    - Flutter
+  - image_gallery_saver (1.5.0):
+    - Flutter
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - battery (from `.symlinks/plugins/battery/ios`)
+  - battery_plus (from `.symlinks/plugins/battery_plus/ios`)
+  - Flutter (from `Flutter`)
+  - gallery_saver (from `.symlinks/plugins/gallery_saver/ios`)
+  - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+
+EXTERNAL SOURCES:
+  battery:
+    :path: ".symlinks/plugins/battery/ios"
+  battery_plus:
+    :path: ".symlinks/plugins/battery_plus/ios"
+  Flutter:
+    :path: Flutter
+  gallery_saver:
+    :path: ".symlinks/plugins/gallery_saver/ios"
+  image_gallery_saver:
+    :path: ".symlinks/plugins/image_gallery_saver/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+
+SPEC CHECKSUMS:
+  battery: 6b19dafdbba590f03b1f0cd2f1224e3ffedadbe6
+  battery_plus: 7851ab482c336dd101ae735dc9363f01e1223c7c
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  gallery_saver: 9fc173c9f4fcc48af53b2a9ebea1b643255be542
+  image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
+  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
+
+PODFILE CHECKSUM: fff3348f19d060f45045a9c9fbca3a264147c2f7
+
+COCOAPODS: 1.12.1
