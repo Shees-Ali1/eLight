@@ -11,6 +11,271 @@ import 'package:intl/intl.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_application_1/home_section/home_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class AdditionalSettingsDialog extends StatefulWidget {
+  final ValueChanged<String> onStreamUrlChanged;
+
+  const AdditionalSettingsDialog({Key? key, required this.onStreamUrlChanged}) : super(key: key);
+
+  @override
+  _AdditionalSettingsDialogState createState() => _AdditionalSettingsDialogState();
+}
+
+class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
+
+
+  late SharedPreferences _prefs;
+  double brightnessValue = 0.0;
+  double contrastValue = 0.0;
+  double saturationValue = 0.0;
+
+
+
+  bool switch1Value = false;
+  bool switch2Value = false;
+  bool switch3Value = false;
+  bool switch4Value = false;
+  bool switch5Value = false;
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize SharedPreferences instance
+    _initPrefs();
+  }
+
+
+  Future<void> _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    // Retrieve the switch states from SharedPreferences
+    setState(() {
+      switch1Value = _prefs.getBool('switch1Value') ?? false;
+      switch2Value = _prefs.getBool('switch2Value') ?? false;
+      switch3Value = _prefs.getBool('switch3Value') ?? false;
+      switch4Value = _prefs.getBool('switch4Value') ?? false;
+      switch5Value = _prefs.getBool('switch5Value') ?? false;
+    });
+  }
+
+  void _savePrefs() {
+    // Save the switch states to SharedPreferences
+    _prefs.setBool('switch1Value', switch1Value);
+    _prefs.setBool('switch2Value', switch2Value);
+    _prefs.setBool('switch3Value', switch3Value);
+    _prefs.setBool('switch4Value', switch4Value);
+    _prefs.setBool('switch5Value', switch5Value);
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Opacity(
+                opacity: 0.9,
+                child: Dialog(
+                  insetPadding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    color: Colors.black,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          _buildSlider('Brightness', brightnessValue, 'brightness', (newValue) {
+                            setState(() {
+                              brightnessValue = newValue;
+                            });
+                            // Handle brightness value change in real-time
+                          }),
+                          _buildSlider('Contrast', contrastValue, 'contrast', (newValue) {
+                            setState(() {
+                              contrastValue = newValue;
+                            });
+                            // Handle contrast value change in real-time
+                          }),
+                          _buildSlider('Saturation', saturationValue, 'saturation', (newValue) {
+                            setState(() {
+                              saturationValue = newValue;
+                            });
+                            // Handle saturation value change in real-time
+                          }),
+                          SizedBox(height: 1),
+                          _buildSwitch('ChangeFilter', switch1Value, (newValue) {
+                            setState(() {
+                              switch1Value = newValue;
+                              if (newValue) {
+                                widget.onStreamUrlChanged('http://192.168.91.1:81/');
+                              } else {
+                                widget.onStreamUrlChanged('http://192.168.91.1:81/?filter=2');
+                              }
+                            });
+                            _savePrefs(); // Save the switch states when changed
+                          }),
+                          _buildSwitch('H-Mirror', switch2Value, (newValue) {
+                            setState(() {
+                              switch2Value = newValue;
+                              if (newValue) {
+                                widget.onStreamUrlChanged('http://192.168.91.1:81/?filter=1');
+                              } else {
+                                widget.onStreamUrlChanged('http://192.168.91.1:81/?filter=2');
+                              }
+                            });
+                            _savePrefs(); // Save the switch states when changed
+                          }),
+                          _buildSwitch('Raw GMA', switch3Value, (newValue) {
+                            setState(() {
+                              switch3Value = newValue;
+                              if (newValue) {
+                                widget.onStreamUrlChanged('http://192.168.91.1:81/?filter=1');
+                              } else {
+                                widget.onStreamUrlChanged('http://192.168.91.1:81/?filter=2');
+                              }
+                            });
+                            _savePrefs(); // Save the switch states when changed
+                          }),
+                          _buildSwitch('Lens Correction', switch4Value, (newValue) {
+                            setState(() {
+                              switch4Value = newValue;
+                              if (newValue) {
+                                widget.onStreamUrlChanged('http://192.168.91.1:81/?filter=1');
+                              } else {
+                                widget.onStreamUrlChanged('http://192.168.91.1:81/?filter=2');
+                              }
+                            });
+                            _savePrefs(); // Save the switch states when changed
+                          }),
+                          _buildSwitch('Disable Sleep Mode', switch5Value, (newValue) {
+                            setState(() {
+                              switch5Value = newValue;
+                              if (newValue) {
+                                widget.onStreamUrlChanged('http://192.168.91.1:81/?filter=1');
+                              } else {
+                                widget.onStreamUrlChanged('http://192.168.91.1:81/?filter=2');
+                              }
+                            });
+                            _savePrefs(); // Save the switch states when changed
+                          }),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSlider(String name, double value, String type, ValueChanged<double> onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          name,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        Row(
+          children: [
+            Text(
+              '-2',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            Expanded(
+              child: Slider(
+                value: value,
+                onChanged: onChanged,
+                min: -2.0,
+                max: 2.0,
+                divisions: 40,
+                label: value.toString(),
+                activeColor: Colors.yellow, // Set the active color to yellow
+              ),
+            ),
+            Text(
+              '+2',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSwitch(String name, bool value, ValueChanged<bool> onChanged) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              name,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(width: 10),
+            Container(
+              height: 25,
+              width: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: Switch(
+                  value: value,
+                  onChanged: (newValue) {
+                    setState(() {
+                      onChanged(newValue);
+                    });
+                    _savePrefs(); // Save the switch states when changed
+                  },
+                  activeColor: Colors.yellow,
+                  hoverColor: Colors.yellow,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
+
+
+}
+
 
 // ignore: camel_case_types
 class cividis extends StatefulWidget {
@@ -31,6 +296,8 @@ class _cividisState extends State<cividis> {
   late Timer _timer;
   String _currentDate = '';
   String _currentTime = '';
+
+  String streamUrl = 'http://192.168.91.1:81/?filter=2';
 
   @override
   void initState() {
@@ -173,8 +440,19 @@ void captureImage(BuildContext context) async {
     // Implement the logic to start/stop recording a video
   }
 
-  void openAdditionalSettings() {
-    // Implement the logic to open the additional settings screen/modal
+  void openAdditionalSettings(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AdditionalSettingsDialog(
+          onStreamUrlChanged: (newStreamUrl) {
+            setState(() {
+              streamUrl = newStreamUrl;
+            });
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -185,23 +463,23 @@ void captureImage(BuildContext context) async {
         children: [
           RepaintBoundary(
             key: boundaryKey,
-            child: ColorFiltered(
-              colorFilter: const ColorFilter.matrix(<double>[
-                 0.0, 0.0, 1.0, 0.0, 0.0,
-                0.0, 1.0, 1.0, 0.0, 0.0,
-                1.0, 1.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0, 1.0, 0.0,
-              ]),
+            // child: ColorFiltered(
+            //   colorFilter: const ColorFilter.matrix(<double>[
+            //      0.0, 0.0, 1.0, 0.0, 0.0,
+            //     0.0, 1.0, 1.0, 0.0, 0.0,
+            //     1.0, 1.0, 0.0, 0.0, 0.0,
+            //     0.0, 0.0, 0.0, 1.0, 0.0,
+            //   ]),
               child: Mjpeg(
                 isLive: true,
-                stream: 'http://192.168.91.1:81/',
+                stream: streamUrl,
                 fit: BoxFit.fill,
                 width: double.infinity,
                 height: double.infinity,
                 timeout: Duration(seconds: 30000),
               ),
             ),
-          ),
+          // ),
           Positioned(
             bottom: 10,
             left: 10,
@@ -290,7 +568,7 @@ void captureImage(BuildContext context) async {
             //   },
               child: ElevatedButton(
                 onPressed: () {
-                  openAdditionalSettings();
+                  openAdditionalSettings(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_1/home_section/home_page.dart';
 import 'dart:async';
-
+import 'package:flutter/services.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  )); // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   runApp(const MyApp());
 }
 

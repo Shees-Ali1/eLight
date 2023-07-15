@@ -2,9 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Recording my Stream</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Save video in gallery</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Save audio in video</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We need your permission to record the screen.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Access the camera to capture videos</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Save photos to the gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>For saving files we accessing the photo library</string>
