@@ -1,7 +1,9 @@
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
-import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +11,7 @@ import 'package:flutter_mjpeg/flutter_mjpeg.dart';
 import 'package:intl/intl.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
+
 import 'package:flutter_application_1/home_section/negative.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,10 +21,10 @@ class AdditionalSettingsDialog extends StatefulWidget {
   const AdditionalSettingsDialog({Key? key, required this.onStreamUrlChanged}) : super(key: key);
 
   @override
-  _AdditionalSettingsDialogState createState() => _AdditionalSettingsDialogState();
+  AdditionalSettingsDialogState createState() => AdditionalSettingsDialogState();
 }
 
-class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
+class AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
 
 
   late SharedPreferences _prefs;
@@ -86,13 +88,14 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Stack(
         children: [
           Positioned(
             top: 0,
+            bottom:0,
             right: 0,
             child: Align(
               alignment: Alignment.topRight,
@@ -105,6 +108,7 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
                   ),
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height * 1,
                     color: Colors.black,
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -129,7 +133,7 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
                             });
                             // Handle saturation value change in real-time
                           }),
-                          SizedBox(height: 1),
+                          const SizedBox(height: 1),
                           _buildSwitch('V-Flip', switch1Value, (newValue) {
                             setState(() {
                               switch1Value = newValue;
@@ -158,13 +162,6 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
                             });
                             _savePrefs(); // Save the switch states when changed
                           }),
-                          // _buildSwitch('Disable Sleep Mode', switch5Value, (newValue) {
-                          //   setState(() {
-                          //     switch5Value = newValue;
-                          //
-                          //   });
-                          //   _savePrefs(); // Save the switch states when changed
-                          // }),
                         ],
                       ),
                     ),
@@ -193,13 +190,13 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
     urlParameters += 'brightness=${adjustedBrightness.toStringAsFixed(0)}';
     urlParameters += '&contrast=${adjustedContrast.toStringAsFixed(0)}';
     urlParameters += '&saturation=${adjustedSaturation.toStringAsFixed(0)}';
-    urlParameters += '&V-Flip=${adjustedVFlip ? '1' : '0'}';
-    urlParameters += '&H-Mirror=${adjustedHMirror ? '1' : '0'}';
-    urlParameters += '&Raw=${adjustedRawGMA ? '1' : '0'}';
-    urlParameters += '&Lens=${adjustedLensCorrection ? '1' : '0'}';
+    urlParameters += '&vFlip=${adjustedVFlip ? '1' : '0'}';
+    urlParameters += '&hMirror=${adjustedHMirror ? '1' : '0'}';
+    urlParameters += '&raw=${adjustedRawGMA ? '1' : '0'}';
+    urlParameters += '&lens=${adjustedLensCorrection ? '1' : '0'}';
 
     setState(() {
-      streamUrl = 'http://192.168.185.1:81/?filter=1&$urlParameters';
+      streamUrl = 'http://192.168.108.1:81/?filter=1&$urlParameters';
       print(streamUrl);
       widget.onStreamUrlChanged(streamUrl);
     });
@@ -213,14 +210,14 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
       children: [
         Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
         Row(
           children: [
-            Text(
+            const Text(
               '-2',
               style: TextStyle(
                 color: Colors.white,
@@ -244,7 +241,7 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
                 activeColor: Colors.yellow, // Set the active color to yellow
               ),
             ),
-            Text(
+            const Text(
               '+2',
               style: TextStyle(
                 color: Colors.white,
@@ -265,12 +262,12 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
           children: [
             Text(
               name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Container(
               height: 25,
               width: 50,
@@ -296,28 +293,25 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
             ),
           ],
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
       ],
     );
   }
-
-
-
 }
 
 
-class jet extends StatefulWidget {
+class Jet extends StatefulWidget {
   final String title;
 
-  const jet({Key? key, required this.title}) : super(key: key);
+  const Jet({Key? key, required this.title}) : super(key: key);
 
   @override
-  _jetState createState() => _jetState();
+  JetState createState() => JetState();
 }
-String streamUrl = 'http://192.168.185.1:81/?filter=1';
+String streamUrl = 'http://192.168.108.1:81/?filter=1';
 
 
-class _jetState extends State<jet> {
+class JetState extends State<Jet> {
   GlobalKey boundaryKey = GlobalKey();
  final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
   final DateFormat _timeFormat = DateFormat('HH:mm:ss');
@@ -353,120 +347,133 @@ class _jetState extends State<jet> {
   }
 
   void captureImage(BuildContext context) async {
-  try {
-    RenderRepaintBoundary boundary =
-        boundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-    ui.Image image = await boundary.toImage(pixelRatio: 1.0);
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    List<int> pngBytes = byteData!.buffer.asUint8List();
+    try {
+      RenderRepaintBoundary boundary =
+      boundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage(pixelRatio: 1.0);
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      List<int> pngBytes = byteData!.buffer.asUint8List();
 
-    // Get the directory for storing the image
-    Directory directory = await getTemporaryDirectory();
-    String filePath = '${directory.path}/eLight.png';
+      Directory directory = await getTemporaryDirectory();
+      String filePath = '${directory.path}/eLight.png';
 
-    // Save the image to the gallery
-    File file = File(filePath);
-    await file.writeAsBytes(pngBytes);
+      File file = File(filePath);
+      await file.writeAsBytes(pngBytes);
 
-    // Create a new image with the date and time text
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-    final imageSize = Size(image.width.toDouble(), image.height.toDouble());
-    canvas.drawImage(image, Offset.zero, Paint());
+      final recorder = ui.PictureRecorder();
+      final canvas = Canvas(recorder);
+      final imageSize = Size(image.width.toDouble(), image.height.toDouble());
+      canvas.drawImage(image, Offset.zero, Paint());
 
-    // Add the date and time text
-    final textStyle = ui.TextStyle(
-      color: Colors.black,
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-    );
-    final paragraphStyle = ui.ParagraphStyle(textAlign: TextAlign.center);
-    final paragraphBuilder = ui.ParagraphBuilder(paragraphStyle)
-      ..pushStyle(textStyle)
-      ..addText(_currentDate + '\n' + _currentTime);
-    final paragraph = paragraphBuilder.build()
-      ..layout(ui.ParagraphConstraints(width: imageSize.width));
-    final textOffset = Offset(10, 10); // Adjust the position of the text as needed
-    canvas.drawParagraph(paragraph, textOffset);
+      const logoImageProvider = AssetImage('assets/images/Logo.png');
+      final logoImageStream = logoImageProvider.resolve(ImageConfiguration.empty);
+      final logoImageCompleter = Completer<ui.Image>();
+      final logoImageListener = ImageStreamListener((ImageInfo info, bool synchronousCall) {
+        final ui.Image image = info.image;
+        logoImageCompleter.complete(image);
+      });
+      logoImageStream.addListener(logoImageListener);
+      final logoImage = await logoImageCompleter.future;
+      logoImageStream.removeListener(logoImageListener);
 
-    // Save the modified image with the text
-    final modifiedImage = await recorder.endRecording().toImage(
-      imageSize.width.toInt(),
-      imageSize.height.toInt(),
-    );
-    ByteData? modifiedByteData = await modifiedImage.toByteData(
-      format: ui.ImageByteFormat.png,
-    );
-    List<int> modifiedPngBytes = modifiedByteData!.buffer.asUint8List();
-    await file.writeAsBytes(modifiedPngBytes);
+      const logoSize = Size(250, 150); // Adjust the size of the logo as needed
 
-    // Save the modified image to the gallery
-    final result = await ImageGallerySaver.saveFile(file.path);
+      // Calculate the logo offset to place it at the top-right corner
+      canvas.drawImageRect(
+          logoImage,
+          Rect.fromLTWH(0, 0, logoImage.width.toDouble(), logoImage.height.toDouble()),
+          Offset(imageSize.width - logoSize.width, -35) & logoSize,
+          Paint());
 
-    // Show a small alert when the image is saved
-    showDialog(
-  context: context,
-  builder: (BuildContext context) {
-    // Close the dialog after 1 second
-    Future.delayed(Duration(seconds: 1), () {
-      Navigator.of(context).pop();
-    });
+      final textStyle = ui.TextStyle(
+        color: Colors.black,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      );
+      final paragraphStyle = ui.ParagraphStyle(textAlign: TextAlign.left);
+      final paragraphBuilder = ui.ParagraphBuilder(paragraphStyle)
+        ..pushStyle(textStyle)
+        ..addText(_currentDate)
+        ..addText(' ')
+        ..addText(_currentTime);
+      final paragraph = paragraphBuilder.build()
+        ..layout(ui.ParagraphConstraints(width: imageSize.width));
 
-    return Stack(
-          children: [
-           Positioned(
-  bottom: 0, // Adjust the top position as needed
-   left: 0,
-  right: 0,
-  child: Center(
-    child: AlertDialog(
-      // title: Text('Image Saved'),
-      content: Container(
-        height: 20, // Set the desired height of the content area
-       
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Adjust the vertical alignment
-          children: [
-            Text(
-              'The captured image has been saved successfully.',
-              style: TextStyle(fontSize: 10),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    ),
-  ),
-),
-          ],
-        );
-      },
-    );
-  } catch (error) {
-    // Handle any error that occurred during the capture process
-    print('Error capturing and saving image: $error');
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // Close the dialog after 1 second
-        Future.delayed(Duration(seconds: 1), () {
-          Navigator.of(context).pop();
-        });
+      // Calculate the text offset to place it at the bottom-left corner
+      final textOffset = Offset(10, imageSize.height - paragraph.height - 10);
 
-        return AlertDialog(
-          title: Text('Error'),
-          // content: Text('An error occurred while capturing and saving the image.'),
-        );
-      },
-    );
+      canvas.drawParagraph(paragraph, textOffset);
+
+      final modifiedImage = await recorder.endRecording().toImage(
+        imageSize.width.toInt(),
+        imageSize.height.toInt(),
+      );
+      ByteData? modifiedByteData = await modifiedImage.toByteData(
+        format: ui.ImageByteFormat.png,
+      );
+      List<int> modifiedPngBytes = modifiedByteData!.buffer.asUint8List();
+      await file.writeAsBytes(modifiedPngBytes);
+
+      final result = await ImageGallerySaver.saveFile(file.path);
+
+      print(result);
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          Future.delayed(const Duration(seconds: 1), () {
+            Navigator.of(context).pop();
+          });
+
+          return const Stack(
+            children: [
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: AlertDialog(
+                  content: SizedBox(
+                    height: 20,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Image Saved to gallery',
+                              style: TextStyle(fontSize: 13),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          Future.delayed(const Duration(seconds: 1), () {
+            Navigator.of(context).pop();
+          });
+
+          return const AlertDialog(
+            title: Text('Error'),
+          );
+        },
+      );
+    }
   }
-}
 
 
 
-  void recordVideo() {
-    // Implement the logic to start/stop recording a video
-  }
 
   void openAdditionalSettings(BuildContext context) {
     showDialog(
@@ -491,23 +498,13 @@ class _jetState extends State<jet> {
         children: [
           RepaintBoundary(
             key: boundaryKey,
-            
-            // child: ColorFiltered(
-            //   colorFilter: 
-            //   // GrayScaleFalseColorsFilter(),
-            //   const ColorFilter.matrix(<double>[
-            //    0.0, 0.0, 1.0, 0.0, 0.0,    // Red transformation mapped to blue hue
-            //     0.0, 1.0, 0.0, 0.0, 0.0,    // Green transformation mapped to red hue
-            //     1.0, 0.0, 0.0, 0.0, 0.0,    // Blue transformation mapped to green hue
-            //     0.0, 0.0, 0.0, 1.0, 0.0,    // Alpha transformation
-            //   ]),
               child: Mjpeg(
                 isLive: true,
                 stream: streamUrl,
                 fit: BoxFit.fill,
                 width: double.infinity,
                 height: double.infinity,
-                timeout: Duration(seconds: 30000),
+                timeout: const Duration(seconds: 30000),
               ),
             ),
           // ),
@@ -521,14 +518,14 @@ class _jetState extends State<jet> {
                   width: 130,
                   child: Text(
                     _currentDate,
-                    style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold,),
+                    style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold,),
                   ),
                 ),
                 SizedBox(
                   width: 150,
                   child: Text(
                     _currentTime,
-                    style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold,),
+                    style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold,),
                   ),
                 ),
               ],
@@ -536,7 +533,7 @@ class _jetState extends State<jet> {
           ),
           Positioned(
             top: 10,
-            right: 180,
+            right: 100,
             child: ElevatedButton(
               onPressed: () {
                 captureImage(context);
@@ -560,43 +557,8 @@ class _jetState extends State<jet> {
             ),
           ),
           Positioned(
-            top: 10,
-            right: 100,
-            child: ElevatedButton(
-              onPressed: recordVideo,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-                textStyle: const TextStyle(fontSize: 10),
-                padding: const EdgeInsets.all(0), // Remove horizontal and vertical padding
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
-                ),
-              ),
-              child: const SizedBox(
-                width: 60,
-                height: 60,
-                child: Center(
-                  child: Icon(Icons.videocam,size: 50,),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
             bottom: 10,
             right: 20,
-            // child: PopupMenuButton<String>(
-            //   onSelected: (value) {
-            //     // Handle selected item
-            //   },
-            //   itemBuilder: (BuildContext context) {
-            //     return <PopupMenuEntry<String>>[
-            //       PopupMenuItem<String>(
-            //         value: 'Settings',
-            //         child: Text('Settings'),
-            //       ),
-            //     ];
-            //   },
               child: ElevatedButton(
                 onPressed: () {
                   openAdditionalSettings(context);
@@ -627,7 +589,7 @@ class _jetState extends State<jet> {
               onPressed: () {
                   Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => negative(title: 'negative')),
+      MaterialPageRoute(builder: (context) => const Negative(title: 'negative')),
     );
               },
               style: ElevatedButton.styleFrom(
@@ -662,7 +624,7 @@ void main() {
     MaterialApp(
       title: 'Camera App',
       theme: ThemeData.dark(),
-      home: jet(title: 'Jet'),
+      home: const Jet(title: 'Jet'),
     ),
   );
 }

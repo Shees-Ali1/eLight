@@ -5,10 +5,11 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-  )); // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-  runApp(const MyApp());
+  // Set the preferred orientation to portrait
+  WidgetsFlutterBinding.ensureInitialized(); // Add this line
+  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]).then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -16,6 +17,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Hide the status bar
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
@@ -33,9 +37,8 @@ class SplashScreen extends StatelessWidget {
       Get.off(() =>  const MyHomePage(title: 'Home'));
     });
 
-
     return Scaffold(
-       backgroundColor: const Color(0xFFB2F5E4),
+      backgroundColor: const Color(0xFFB2F5E4),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -43,20 +46,25 @@ class SplashScreen extends StatelessWidget {
             Image.asset(
               'assets/images/Logo.png',
               width: 500,
-              // height: 400,
             ),
-            
-            // const Text(
-            //   'Flip Phone to Horizontal',
-            //   style: TextStyle(fontSize: 10, color: Colors.white),
-            // ),
+            const SizedBox(height: 1),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(10), // Adjust the border radius as needed
+              ),
+              padding: const EdgeInsets.all(5),
+              child: const Text(
+                'Flip horizontal',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-
-
-

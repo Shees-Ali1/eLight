@@ -1,120 +1,18 @@
-import 'dart:async';
+// ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
-import 'dart:typed_data';
-import 'package:flutter/scheduler.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
-import 'package:gallery_saver/files.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:screen_recorder/screen_recorder.dart';
-// import 'package:flutter_screen_recording/flutter_screen_recording.dart';
-
-import 'package:video_player/video_player.dart';
 import 'package:flutter_application_1/home_section/jet.dart';
-// import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
-// import 'package:ffmpeg_kit_flutter/return_code.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dart_vlc/dart_vlc.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter_application_1/home_section/exporter.dart';
-import 'package:flutter_application_1/home_section/frame.dart';
 
-// class ScreenRecorderController {
-//   final SchedulerBinding? binding;
-//   final Exporter _exporter = Exporter();
-//
-//
-//   ScreenRecorderController({
-//     this.pixelRatio = 0.5,
-//     this.skipFramesBetweenCaptures = 2,
-//     this.binding,
-//   })  : _containerKey = GlobalKey(),
-//         _binding = binding ?? SchedulerBinding.instance;
-//
-//   final GlobalKey _containerKey;
-//   final SchedulerBinding _binding;
-//
-//   /// The pixelRatio describes the scale between the logical pixels and the size
-//   /// of the output image. Specifying 1.0 will give you a 1:1 mapping between
-//   /// logical pixels and the output pixels in the image. The default is a pixel
-//   /// ration of 3 and a value below 1 is not recommended.
-//   ///
-//   /// See [RenderRepaintBoundary](https://api.flutter.dev/flutter/rendering/RenderRepaintBoundary/toImage.html)
-//   /// for the underlying implementation.
-//   final double pixelRatio;
-//
-//   /// Describes how many frames are skipped between captured frames.
-//   /// For example, if skipFramesBetweenCaptures = 2, screen_recorder
-//   /// captures a frame, skips the next two frames, and then captures the next
-//   /// frame again.
-//   final int skipFramesBetweenCaptures;
-//
-//   int skipped = 0;
-//
-//   bool _record = false;
-//
-//   void start() {
-//     // Only start recording if no recording is in progress
-//     if (_record) {
-//       return;
-//     }
-//     _record = true;
-//     _binding.addPostFrameCallback(postFrameCallback);
-//   }
-//
-//   void stop() {
-//     _record = false;
-//   }
-//
-//   void postFrameCallback(Duration timestamp) async {
-//     if (!_record) {
-//       return;
-//     }
-//     if (skipped > 0) {
-//       // Count down frames that should be skipped
-//       skipped--;
-//       // Add a new PostFrameCallback to capture the next frame
-//       _binding.addPostFrameCallback(postFrameCallback);
-//       // Skip this frame
-//       return;
-//     }
-//     if (skipped == 0) {
-//       // Reset skipped frame counter
-//       skipped += skipFramesBetweenCaptures;
-//     }
-//     try {
-//       final image = await capture();
-//       if (image == null) {
-//         print('capture returned null');
-//         return;
-//       }
-//       _exporter.onNewFrame(Frame(timestamp, image));
-//     } catch (e) {
-//       print(e.toString());
-//     }
-//     _binding.addPostFrameCallback(postFrameCallback);
-//   }
-//
-//   Future<ui.Image?> capture() async {
-//     final renderObject = _containerKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-//
-//     if (renderObject == null) {
-//       return null;
-//     }
-//
-//     return await renderObject.toImage(pixelRatio: pixelRatio);
-//   }
-// }
 
 
 class AdditionalSettingsDialog extends StatefulWidget {
@@ -123,10 +21,10 @@ class AdditionalSettingsDialog extends StatefulWidget {
   const AdditionalSettingsDialog({Key? key, required this.onStreamUrlChanged}) : super(key: key);
 
   @override
-  _AdditionalSettingsDialogState createState() => _AdditionalSettingsDialogState();
+  AdditionalSettingsDialogState createState() => AdditionalSettingsDialogState();
 }
 
-class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
+class AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
 
 
   late SharedPreferences _prefs;
@@ -190,13 +88,14 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Stack(
         children: [
           Positioned(
             top: 0,
+            bottom:0,
             right: 0,
             child: Align(
               alignment: Alignment.topRight,
@@ -209,6 +108,7 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
                   ),
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height * 1,
                     color: Colors.black,
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -233,7 +133,7 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
                             });
                             // Handle saturation value change in real-time
                           }),
-                          SizedBox(height: 1),
+                          const SizedBox(height: 1),
                           _buildSwitch('V-Flip', switch1Value, (newValue) {
                             setState(() {
                               switch1Value = newValue;
@@ -262,13 +162,6 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
                             });
                             _savePrefs(); // Save the switch states when changed
                           }),
-                          // _buildSwitch('Disable Sleep Mode', switch5Value, (newValue) {
-                          //   setState(() {
-                          //     switch5Value = newValue;
-                          //
-                          //   });
-                          //   _savePrefs(); // Save the switch states when changed
-                          // }),
                         ],
                       ),
                     ),
@@ -297,14 +190,13 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
     urlParameters += 'brightness=${adjustedBrightness.toStringAsFixed(0)}';
     urlParameters += '&contrast=${adjustedContrast.toStringAsFixed(0)}';
     urlParameters += '&saturation=${adjustedSaturation.toStringAsFixed(0)}';
-    urlParameters += '&V-Flip=${adjustedVFlip ? '1' : '0'}';
-    urlParameters += '&H-Mirror=${adjustedHMirror ? '1' : '0'}';
-    urlParameters += '&Raw=${adjustedRawGMA ? '1' : '0'}';
-    urlParameters += '&Lens=${adjustedLensCorrection ? '1' : '0'}';
+    urlParameters += '&vFlip=${adjustedVFlip ? '1' : '0'}';
+    urlParameters += '&hMirror=${adjustedHMirror ? '1' : '0'}';
+    urlParameters += '&raw=${adjustedRawGMA ? '1' : '0'}';
+    urlParameters += '&lens=${adjustedLensCorrection ? '1' : '0'}';
 
     setState(() {
-      streamUrl = 'http://192.168.185.1:81/?filter=2&$urlParameters';
-      print(streamUrl);
+      streamUrl = 'http://192.168.108.1:81/?filter=2&$urlParameters';
       widget.onStreamUrlChanged(streamUrl);
     });
   }
@@ -317,14 +209,14 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
       children: [
         Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
         Row(
           children: [
-            Text(
+            const Text(
               '-2',
               style: TextStyle(
                 color: Colors.white,
@@ -348,7 +240,7 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
                 activeColor: Colors.yellow, // Set the active color to yellow
               ),
             ),
-            Text(
+            const Text(
               '+2',
               style: TextStyle(
                 color: Colors.white,
@@ -369,12 +261,12 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
           children: [
             Text(
               name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Container(
               height: 25,
               width: 50,
@@ -400,12 +292,10 @@ class _AdditionalSettingsDialogState extends State<AdditionalSettingsDialog> {
             ),
           ],
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
       ],
     );
   }
-
-
 
 }
 
@@ -415,22 +305,20 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   GlobalKey boundaryKey = GlobalKey();
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
   final DateFormat _timeFormat = DateFormat('HH:mm:ss');
   late Timer _timer;
   String _currentDate = '';
   String _currentTime = '';
-  bool _isRecording = false;
-  String _recordingFilePath = '';
-  ScreenRecorderController _screenRecorderController = ScreenRecorderController();
 
 
-  String streamUrl = 'http://192.168.185.1:81/?filter=2';
+
+  String streamUrl = 'http://192.168.108.1:81/?filter=2';
 
   @override
   void initState() {
@@ -443,7 +331,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     _timer.cancel();
-    // _videoPlayerController?.dispose();
     super.dispose();
   }
 
@@ -480,18 +367,43 @@ class _MyHomePageState extends State<MyHomePage> {
       final imageSize = Size(image.width.toDouble(), image.height.toDouble());
       canvas.drawImage(image, Offset.zero, Paint());
 
+      const logoImageProvider = AssetImage('assets/images/Logo.png');
+      final logoImageStream = logoImageProvider.resolve(ImageConfiguration.empty);
+      final logoImageCompleter = Completer<ui.Image>();
+      final logoImageListener = ImageStreamListener((ImageInfo info, bool synchronousCall) {
+        final ui.Image image = info.image;
+        logoImageCompleter.complete(image);
+      });
+      logoImageStream.addListener(logoImageListener);
+      final logoImage = await logoImageCompleter.future;
+      logoImageStream.removeListener(logoImageListener);
+
+      const logoSize = Size(250, 150); // Adjust the size of the logo as needed
+
+      // Calculate the logo offset to place it at the top-right corner
+      canvas.drawImageRect(
+          logoImage,
+          Rect.fromLTWH(0, 0, logoImage.width.toDouble(), logoImage.height.toDouble()),
+          Offset(imageSize.width - logoSize.width, -35) & logoSize,
+          Paint());
+
       final textStyle = ui.TextStyle(
-        color: Colors.black,
+        color: Colors.white,
         fontSize: 20,
         fontWeight: FontWeight.bold,
       );
-      final paragraphStyle = ui.ParagraphStyle(textAlign: TextAlign.center);
+      final paragraphStyle = ui.ParagraphStyle(textAlign: TextAlign.left);
       final paragraphBuilder = ui.ParagraphBuilder(paragraphStyle)
         ..pushStyle(textStyle)
-        ..addText(_currentDate + '\n' + _currentTime);
+        ..addText(_currentDate)
+        ..addText(' ')
+        ..addText(_currentTime);
       final paragraph = paragraphBuilder.build()
         ..layout(ui.ParagraphConstraints(width: imageSize.width));
-      final textOffset = Offset(10, 10);
+
+      // Calculate the text offset to place it at the bottom-left corner
+      final textOffset = Offset(10, imageSize.height - paragraph.height - 10);
+
       canvas.drawParagraph(paragraph, textOffset);
 
       final modifiedImage = await recorder.endRecording().toImage(
@@ -505,35 +417,39 @@ class _MyHomePageState extends State<MyHomePage> {
       await file.writeAsBytes(modifiedPngBytes);
 
       final result = await ImageGallerySaver.saveFile(file.path);
+      // ignore: avoid_print
+      print(result);
 
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          Future.delayed(Duration(seconds: 1), () {
+          Future.delayed(const Duration(seconds: 1), () {
             Navigator.of(context).pop();
           });
 
-          return Stack(
+          return const Stack(
             children: [
-
               Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: Center(
-                  child: AlertDialog(
-                    content: Container(
-                      height: 20,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'The captured image has been saved successfully.',
-                            style: TextStyle(fontSize: 10),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
+                child: AlertDialog(
+                  content: SizedBox(
+                    height: 20,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Image Saved to gallery',
+                              style: TextStyle(fontSize: 13),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -543,44 +459,19 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       );
     } catch (error) {
-      print('Error capturing and saving image: $error');
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          Future.delayed(Duration(seconds: 1), () {
+          Future.delayed(const Duration(seconds: 1), () {
             Navigator.of(context).pop();
           });
 
-          return AlertDialog(
+          return const AlertDialog(
             title: Text('Error'),
           );
         },
       );
     }
-  }
-
-  void toggleRecording() {
-    setState(() {
-      _isRecording = !_isRecording;
-
-      if (_isRecording) {
-        _startRecording();
-      } else {
-        _stopRecording();
-      }
-    });
-  }
-
-
-
-  Future<void> _startRecording() async {
-    // _screenRecorderController.start();
-    print("recording start");
-  }
-
-  void _stopRecording() {
-    // _screenRecorderController.stop();
-    print("recording stop");
   }
 
 
@@ -598,6 +489,8 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -606,25 +499,15 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           RepaintBoundary(
             key: boundaryKey,
-            // child: ColorFiltered(
-            //   colorFilter: ColorFilter.matrix(<double>[
-            //     0.2989, 0.587, 0.114, 0.0, 0.0, // Red transformation mapped to grayscale
-            //     0.2989, 0.587, 0.114, 0.0, 0.0, // Green transformation mapped to grayscale
-            //     0.2989, 0.587, 0.114, 0.0, 0.0, // Blue transformation mapped to grayscale
-            //     0.0, 0.0, 0.0, 1.0, 0.0, // Alpha transformation
-            //   ]),
-
                 child: Mjpeg(
                   isLive: true,
                   stream: streamUrl,
                   fit: BoxFit.fill,
                   width: double.infinity,
                   height: double.infinity,
-                  timeout: Duration(seconds: 30),
+                  timeout: const Duration(seconds: 30),
                 ),
               ),
-            // ),
-
       Positioned(
         bottom: 10,
         left: 10,
@@ -650,7 +533,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       Positioned(
         top: 10,
-        right: 180,
+        right: 100,
         child: ElevatedButton(
           onPressed: () {
             captureImage(context);
@@ -673,29 +556,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      Positioned(
-        top: 10,
-        right: 100,
-        child: ElevatedButton(
-          onPressed: toggleRecording,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _isRecording ? Colors.red : Colors.white,
-            foregroundColor: Colors.black,
-            textStyle: const TextStyle(fontSize: 10),
-            padding: const EdgeInsets.all(0), // Remove horizontal and vertical padding
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
-            ),
-          ),
-          child: const SizedBox(
-            width: 60,
-            height: 60,
-            child: Center(
-              child: Icon(Icons.videocam, size: 50),
-            ),
-          ),
-        ),
-      ),
+
       Positioned(
         bottom: 10,
         right: 20,
@@ -728,7 +589,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => jet(title: 'Jet')),
+              MaterialPageRoute(builder: (context) => const Jet(title: 'Jet')),
             );
           },
           style: ElevatedButton
@@ -754,7 +615,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     ),
-
         ],
     ),
     );
@@ -762,16 +622,12 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-  ));
-  // DartVLC.initialize();
 
   runApp(
     MaterialApp(
       title: 'Camera App',
       theme: ThemeData.dark(),
-      home: MyHomePage(title: 'HomePage'),
+      home: const MyHomePage(title: 'HomePage'),
     ),
   );
 }

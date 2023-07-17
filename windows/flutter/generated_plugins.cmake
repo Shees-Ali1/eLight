@@ -3,13 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  battery_plus
-  dart_vlc
   file_selector_windows
-  flutter_native_view
-  permission_handler_windows
-  screen_retriever
-  window_manager
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
